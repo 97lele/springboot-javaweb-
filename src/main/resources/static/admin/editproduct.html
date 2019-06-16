@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>后台管理</title>
+    <!-- BOOTSTRAP STYLES-->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet"/>
+    <!-- FONTAWESOME STYLES-->
+    <link href="../assets/css/font-awesome.css" rel="stylesheet"/>
+    <!-- CUSTOM STYLES-->
+    <link href="../assets/css/custom.css" rel="stylesheet"/>
+    <!-- GOOGLE FONTS-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+
+</head>
+<body>
+
+
+<div id="wrapper">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="adjust-nav">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="../assets/img/logo.png" style="width:50px;height:50px" zhu/>
+                </a>
+            </div>
+
+            <span class="logout-spn">
+                  <a href="http://localhost:8080/user/admin/logout" style="color:#fff;">LOGOUT</a>
+
+                </span>
+        </div>
+    </div>
+    <!-- /. NAV TOP  -->
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+
+
+                <li>
+                    <a href="index.html"><i class="fa fa-desktop "></i>主控台</a>
+                </li>
+
+
+                <li>
+                    <a href="category.html"><i class="fa fa-table "></i>类目管理 </a>
+                </li>
+                <li class="active-link">
+                    <a href="editproduct.html"><i class="fa fa-edit "></i>商品管理</a>
+                </li>
+
+
+                <li>
+                    <a href="user.html"><i class="fa fa-user "></i>用户管理</a>
+                </li>
+                <li>
+                    <a href="ordermanage.html"><i class="fa fa-bar-chart-o"></i>订单管理</a>
+                </li>
+
+
+            </ul>
+        </div>
+
+    </nav>
+    <!-- /. NAV SIDE  -->
+    <div id="page-wrapper">
+        <div id="page-inner">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>商品管理 </h2>
+                </div>
+            </div>
+            <div id="content">
+
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li class=""><a href="#addproduct" data-toggle="tab" id="addProduct">新增商品</a>
+                        </li>
+                        <li class="active"><a href="#searchproduct" data-toggle="tab" id="getProduct">商品查询</a>
+                        </li>
+                        <li class=""><a href="#editproduct" data-toggle="tab" id="updateProduct">商品编辑</a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <hr/>
+                <div class="tab-content">
+                    <div class="tab-pane fade " id="addproduct">
+                        <div class="form-group">
+
+                            <label>商品名称</label><br> <input v-model="name" placeholder="请输入商品名">
+                        </div>
+
+                        <div class="form-group">
+                            <label>商品类目</label><br> <select id="category" v-model="category">
+                            <option v-for="item  in categoryList" :value="item.id">{{item.name}}</option>
+                        </select>
+                        </div>
+                        <div class="form-group">
+                            <label>商品价格($)</label>
+                            <br>
+                            <input type="number" v-model="price"
+                                   placeholder="请输入商品价格">
+                        </div>
+
+                        <div class="form-group">
+                            <label>商品库存</label><br> <input type="number" v-model="stock"
+                                                           placeholder="请输入商品库存">
+                        </div>
+                        <div class="form-group">
+                            <label>商品描述</label>
+                            <br>
+                            <textarea v-model="description" placeholder="请输入商品描述"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <img id="preview" src="../assets/img/upload.jpg" height="100px" width="100px"
+                                     alt="商品主图"> <input type="file" id="file" @change="getFile" style="display:none">
+                            </div>
+
+                            <label for="file" class="btn btn-primary">选择商品主图</label>
+                        </div>
+                        <div class="form-group">
+                            <label>上新商品</label>
+                            <label class="radio-inline">
+                                <input type="radio" value="1" v-model="isNew">是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="0" v-model="isNew">否
+                            </label>
+
+                        </div>
+                        <div class="form-group">
+                            <label>折扣商品</label>
+                            <label class="radio-inline">
+                                <input type="radio" value="1" v-model="discount">是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="0" v-model="discount">否
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <button @click="addProduct" type="button" class="btn btn-success">添加商品</button>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade active in" id="searchproduct">
+                        <div class="form-group">
+
+                            <label>商品名称搜索</label> <br><input v-model="sname" placeholder="请输入商品名">
+                            <br>
+                            <label>类目搜索</label> <br>
+                            <select id="category" v-model="scategory">
+                                <option v-for="item  in categoryList" :value="item.id">{{item.name}}</option>
+                            </select>
+                            <br>
+                            <label>商品id搜索</label><br>
+                            <input
+                                    v-model="sid" placeholder="请输入商品id进行搜索">
+                            <br>
+                            <label>商品价格区间搜索</label><br>
+                            <input type=number style="width:70px;height:25px" maxlength="9" v-model="lowprice">至<input
+                                style="width:70px;height:25px" maxlength="9" type=number v-model="highprice">
+
+                            <button type="button" class="btn btn-info" @click="search()">搜索</button>
+                            <br>
+                            <table class="table table-bordered">
+                                <!-- On rows -->
+                                <caption>商品列表</caption>
+                                <th>商品id</th>
+                                <th>商品名</th>
+                                <th>商品价格</th>
+                                <th>商品类目</th>
+                                <th>商品库存</th>
+                                <th>是否新品</th>
+                                <th>是否折扣商品</th>
+                                <th>商品主图</th>
+                                <th>商品描述</th>
+                                <th>操作</th>
+
+                                <!-- On cells (`td` or `th`) -->
+                                <tr v-for="item in productList">
+                                    <td class="active">{{item.id}}</td>
+                                    <td class="danger">{{item.name}}</td>
+                                    <td class="warning">{{item.price}}</td>
+                                    <td class="info">{{item.category.name}}</td>
+                                    <td class="success">{{item.stock}}</td>
+                                    <td class="active">
+                                        <span v-if="item.isNew == 0">否</span>
+                                        <span v-else>是</span>
+                                    </td>
+                                    <td class="danger">
+                                        <span v-if="item.discount == 0">否</span>
+                                        <span v-else>是</span>
+                                    </td>
+                                    <td class="warning"><img :src=item.imgurl style="width:100px;height:100px"
+                                                             alt="暂无图片"/></td>
+                                    <td class="success">{{item.description}}</td>
+                                    <td class="active">
+                                        <button type="button"
+                                                class="btn btn-danger" @click="deleteProduct(item.id)">删除
+                                        </button>
+                                        <button type="button" class="btn btn-primary" @click="getInfo(item)">修改</button>
+
+                                </tr>
+                            </table>
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    <li><a aria-label="Previous" @click="operate(-1)"> <span
+                                            aria-hidden="true">&laquo;</span>
+                                    </a></li>
+                                    <li>
+                                    <li><a @click="current(n)" v-for="n in totalPage" :value="n">{{n}}</a></li>
+
+                                    </li>
+                                    <li><a aria-label="Next" @click="operate(1)"> <span
+                                            aria-hidden="true">&raquo;</span>
+                                    </a></li>
+                                </ul>
+                            </nav>
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="editproduct">
+                        <div class="form-group">
+                            <label>商品id</label> <input type="text" v-model="uid" disabled="disabled">
+                        </div>
+                        <div class="form-group">
+
+                            <label>商品名称</label> <input v-model="uname" placeholder="请输入商品名">
+                        </div>
+
+                        <div class="form-group">
+                            <label>商品类目</label> <select id="ucategory" v-model="ucategory">
+                            <option v-for="item  in categoryList" :value="item.id">{{item.name}}</option>
+                        </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>商品价格($)</label> <input type="number" v-model="uprice"
+                                                          placeholder="请输入商品价格">
+                        </div>
+
+                        <div class="form-group">
+                            <label>商品库存</label> <input type="text" v-model="ustock">
+                        </div>
+                        <div class="form-group">
+                            <label>商品描述</label>
+                            <br>
+                            <textarea v-model="udescription" placeholder="请输入商品描述"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <img id="upreview" :src=uimgurl height="100px" width="100px" alt="商品主图"> <input
+                                    type="file" id="ufile" @change="ugetFile" style="display:none"></div>
+
+                            <label for="ufile" class="btn btn-primary">选择商品主图</label>
+                        </div>
+                        <div class="form-group">
+                            <label>上新商品</label>
+                            <label class="radio-inline">
+                                <input type="radio" value="1" v-model="unew">是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="0" v-model="unew">否
+                            </label>
+
+                        </div>
+                        <div class="form-group">
+                            <label>折扣商品</label>
+                            <label class="radio-inline">
+                                <input type="radio" value="1" v-model="udiscount">是
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" value="0" v-model="udiscount">否
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" @click="updateProduct">修改</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- /. ROW  -->
+    </div>
+    <!-- /. PAGE INNER  -->
+</div>
+<!-- /. PAGE WRAPPER  -->
+</div>
+<div class="footer">
+
+
+</div>
+
+
+<!-- /. WRAPPER  -->
+<!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+<!-- JQUERY SCRIPTS -->
+<script src="../assets/js/jquery-1.10.2.js"></script>
+<!-- BOOTSTRAP SCRIPTS -->
+<script src="../assets/js/bootstrap.min.js"></script>
+<!-- CUSTOM SCRIPTS -->
+<script src="../assets/js/custom.js"></script>
+<script src="../assets/js/vue.js"></script>
+<script
+        src="../assets/js/vue-resource.min.js"></script>
+<script>
+    new Vue({
+        el: '#content',
+        data: {
+            lowprice: "",
+            highprice: "",
+            sid: "",
+            sprice: "",
+            scategory: "",
+            sname: "",
+            uprice: "",
+            ucategory: "",
+            uname: "",
+            uid: "",
+            ustock: "",
+            unew: "",
+            udiscount: "",
+            udescription: "",
+            uimgurl: "",
+            price: "",
+            name: "",
+            category: "",
+            stock: "",
+            isNew: "",
+            discount: "",
+            description: "",
+            categoryList: [],
+            productList: [],
+            head: "http://localhost:8080/product",
+            pageIndex: 1,
+            pageSize: 5,
+            totalPage: "",
+            ope: false,
+        },
+        mounted: function () {
+            this.getSelf();
+
+
+        },
+        methods: {
+
+
+            getSelf: function () {
+                this.$http.get("http://localhost:8080/user/getSelf").then(function (res) {
+
+                    if (res.body.success) {
+                        if (res.body.data.user.role == 1) {
+                            this.ope = true;
+                            this.getProduct();
+                            this.getCategory();
+                        } else {
+                            alert("权限不足")
+                        }
+                    } else {
+                        alert("尚未登陆")
+                    }
+
+
+                })
+            },
+
+            getFile: function (e) {
+
+                var files = e.target.files[0]
+                console.log(files);
+                if (!e || !window.FileReader) return  // 看支持不支持FileReader
+                let reader = new FileReader()
+                reader.readAsDataURL(files) // 这里是最关键的一步，转换就在这里
+                reader.onloadend = function (e) {
+                    var img = document.getElementById("preview");
+                    img.src = e.target.result
+
+                }
+            },
+            ugetFile: function (e) {
+
+                var files = e.target.files[0]
+                if (!e || !window.FileReader) return  // 看支持不支持FileReader
+                let reader = new FileReader()
+                reader.readAsDataURL(files) // 这里是最关键的一步，转换就在这里
+                reader.onloadend = function (e) {
+                    var img = document.getElementById("upreview");
+                    img.src = e.target.result
+                }
+            },
+            getCategory: function () {
+                if (this.ope) {
+                    this.$http.get("http://localhost:8080/category", {
+                        params: {
+                            method: "getcategory"
+                        }
+                    }).then(function (res) {
+                        if (res.body.success) {
+                            this.categoryList = res.body.data.list;
+
+                        } else {
+                            alert("初始化失败");
+                        }
+                    }, function () {
+                        console.log('请求失败处理');
+                    });
+                }
+
+            },
+
+
+            addProduct: function () {
+                if (this.ope) {
+                    var form = new window.FormData();
+
+                    form.append('price', this.price);
+                    form.append('name', this.name);
+                    form.append('category', this.category);
+                    form.append('stock', this.stock);
+                    form.append('desc', this.description);
+                    form.append('dis', this.discount);
+                    form.append('isnew', this.isNew);
+                    var file = document.getElementById("file").files[0];
+                    form.append('file', file);
+
+
+                    this.$http.post(this.head+"/create", form, {
+                        headers: {'Content-Type': 'multipart/form-data'}
+                    }).then(function (res) {
+                        if (res.body.success) {
+                            alert("新增成功");
+                            this.getProduct();
+                            this.clear();
+                            document.getElementById("getProduct").click();
+                        }
+                    }, function (res) {
+                        console.log(res.body.data);
+                    });
+
+                }
+
+
+            },
+            checkCount: function (e) {
+
+                if (parseInt(e.target.value) > parseInt(e.srcElement.dataset.stock)) {
+                    e.target.value = e.srcElement.dataset.stock
+                }
+                if (parseInt(e.target.value) <= 0) {
+                    e.target.value = 1;
+                }
+            },
+
+            search: function () {
+                if (this.ope) {
+                    if (this.sid == "") {
+                        this.pageIndex = 1;
+                        this.getProduct();
+                    } else {
+                        this.$http.get(this.head + "/getById", {
+                            params: {
+                                id: this.sid
+                            }
+                        }).then(function (res) {
+                            if (res.body.success) {
+                                this.productList = res.body.data.list
+
+                            } else {
+                                alert(res.body.msg);
+                            }
+                        }, function () {
+                            console.log('请求失败处理');
+                        });
+                    }
+                }
+
+            },
+            deleteProduct: function (id) {
+                if (this.ope) {
+                    this.$http.post(this.head+"/delete", {
+                        id: id
+                    }, {
+                        emulateJSON: true
+                    }).then(function (res) {
+                        if (res.body.success) {
+                            alert("删除成功");
+                            this.getProduct();
+                        }
+                    }, function (res) {
+                        console.log(res.status);
+                    });
+                }
+
+            },
+
+            logout: function () {
+
+                this.$http.post("http://localhost:8080/user/admin/logout", {
+                    emulateJSON: true
+                }).then(function (res) {
+                    if (res.body.success) {
+                        alert("登出成功");
+                        window.location.href = "./sign.html"
+                    }
+                }, function (res) {
+                    console.log(res.status);
+                });
+            },
+
+            getInfo: function (item) {
+                document.getElementById("updateProduct").click();
+                this.uprice = item.price;
+                this.uname = item.name;
+                this.ucategory = item.category.id;
+                this.uid = item.id;
+                this.ustock = item.stock;
+                this.uimgurl = item.imgurl;
+                this.udiscount = item.discount;
+                this.unew = item.isNew
+                this.udescription = item.description
+            },
+
+
+            operate: function (id) {
+                this.pageIndex = this.pageIndex + id;
+                if (this.pageIndex < 1) {
+                    this.pageIndex = 1
+                }
+                if (this.pageIndex >= this.totalPage) {
+                    this.pageIndex = this.totalPage;
+                }
+                this.getProduct();
+
+            },
+            current: function (id) {
+                this.pageIndex = id;
+                this.getProduct();
+
+            },
+
+            updateProduct: function () {
+                if (this.ope) {
+                    var form = new window.FormData();
+
+                    form.append('price', this.uprice);
+                    form.append('name', this.uname);
+                    form.append('category', this.ucategory);
+                    form.append('stock', this.ustock);
+                    form.append('desc', this.udescription);
+                    form.append('dis', this.udiscount);
+                    form.append('isnew', this.unew);
+                    form.append('id', this.uid);
+                    var s = confirm("是否更新了图片?")
+                    if (s) {
+                        var file = document.getElementById("ufile").files[0];
+                        form.append('file', file);
+                    }
+
+
+                    this.$http.post(this.head+"/update", form, {
+                        headers: {'Content-Type': 'multipart/form-data'}
+                    }).then(function (res) {
+                        if (res.body.success) {
+                            alert("修改成功");
+                            this.getProduct();
+
+                        }
+                    }, function (res) {
+                        console.log(res.body.data);
+                    });
+                }
+
+
+            },
+            clear: function () {
+                this.uprice = "";
+                this.ucategory = "";
+                this.uname = "";
+                this.uid = "";
+                this.price = "";
+                this.name = "";
+                this.category = "";
+                this.sname = "";
+                this.sprice = "";
+                this.scategory = "";
+                this.ustock = "";
+                this.stock = "";
+                this.lowprice = "";
+                this.highprice = "";
+
+                document.getElementById('file').value = '';
+                document.getElementById('ufile').value = '';
+
+            },
+
+            getProduct: function () {
+                if (this.ope) {
+                    this.$http.get(this.head+"/getByList", {
+                        params: {
+                            name: this.sname,
+                            highprice: this.highprice,
+                            lowprice: this.lowprice,
+                            category: this.scategory,
+                            pageSize: this.pageSize,
+                            pageIndex: this.pageIndex
+                        }
+                    }).then(function (res) {
+                        if (res.body.success) {
+                            this.productList = res.body.data.list
+                            this.totalPage = res.body.data.page;
+                            this.clear();
+                            document.getElementById("getProduct").click();
+
+                        } else {
+                            alert(res.body.msg);
+                        }
+                    }, function () {
+                        console.log('请求失败处理');
+                    });
+                }
+
+            },
+
+        }
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>购物车</title>
+<link href="../assets/css/bootstrap.css" rel='stylesheet' type='text/css' />
+<!-- jQuery (necessary JavaScript plugins) -->
+<script type='text/javascript' src="../assets/js/jquery-1.10.2.js"></script>
+<!-- Custom Theme files -->
+<link href="../assets/css/style.css" rel='stylesheet' type='text/css' />
+<!-- Custom Theme files -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- start menu -->
+<link href="../assets/css/megamenu.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="../assets/js/megamenu.js"></script>
+<script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
+<script src="../assets/js/menu_jquery.js"></script>
+<script type="text/javascript" src="../assets/js/vue.js"></script>
+<script type="text/javascript" src="../assets/js/vue-resource.min.js"></script>
+<link rel="stylesheet" href="../assets/css/etalage.css">
+<script src="../assets/js/jquery.etalage.min.js"></script>
+<script>
+		
+		</script>
+<!-- the jScrollPane script -->
+<script type="text/javascript" src="../assets/js/jquery.jscrollpane.min.js"></script>
+		<script type="text/javascript" id="sourcecode">
+			$(function()
+			{
+				$('.scroll-pane').jScrollPane();
+			});
+		</script> 
+</head>
+<body>
+<!-- header_top -->
+<div class="top_bg">
+<div class="container">
+<div class="header_top">
+	<div class="top_left">
+		<h2><a href="#">通知</a> 尊敬的用户您好，请尽快完善信息！  </h2>
+	</div>
+	<div class="top_right">
+		<ul>
+			<li><a href="history.html">近期浏览历史</a></li>
+		<li class="login" >
+						<div  id="loginContainer">|<a href="#" id="loginButton"><span>登陆</span></a>
+						    <div id="loginBox">                
+						        <form id="loginForm">
+						                <fieldset id="body">
+						                	<fieldset>
+						                          <label for="account">用户名</label>
+						                          <input type="text" name="account" id="account">
+						                    </fieldset>
+						                    <fieldset>
+						                            <label for="password">密码</label>
+						                            <input type="password" name="password" id="password">
+						                     </fieldset>
+						                     <script>
+						                     function func(){
+						                    	 return false;
+						                     }
+						                     </script>
+						                    <input type="submit" id="login" value="登陆" onclick="return func()">
+						            	</fieldset>
+							 </form>
+				        </div>
+			      </div>
+			      							<div  id="logout" >|<a href="http://localhost:8080/user/logout" id="loginButton"><span>&nbsp;&nbsp;注销</span></a></div>
+			      			      
+			</li>
+		</ul>
+	</div>
+	<div class="clearfix"></div>
+</div>
+</div>
+</div>
+<!-- header -->
+<div class="header_bg">
+<div class="container">
+	<div class="header">
+		<div class="logo">
+			<a href="index.html"><img src="../assets/img/logo.png" alt="" style="height:50px;width="50px"/><span style="color:blue">&nbsp;&nbsp;( ¯(∞)¯ )の店&nbsp;&nbsp;</span><img src="../assets/img/logo2.png" alt="" style="height:50px;width="50px"/> </a>
+		</div>
+		
+		<!-- start header_right -->
+		<div class="header_right" id="sign">
+		<div class="create_btn"  >
+			<a class="arrow"  href="user.html">注册 <img src="../assets/img/right_arrow.png" alt=""/>  </a>
+		</div>
+	
+	
+		
+	
+		<div class="clearfix"></div>
+		</div>
+		<!-- start header menu -->
+	<ul class="megamenu skyblue">
+				<li><a class="color1" href="product.html">主页</a></li>
+			
+						
+			
+				<li><a class="color3" href="buy.html">购物车</a></li>
+								<li><a class="color5" href="order.html">订单中心</a></li>
+								<li><a class="color2 " href="user.html">用户中心</a></li>
+						
+			
+		</ul>
+	
+	</div>
+</div>
+</div>
+<!-- content -->
+<div id="content">
+<div class="container">
+<div class="main">
+		<table class="table table-bordered">
+			<!-- On rows -->
+			<caption>订单列表</caption>
+			<th>订单id</th>
+			<th>订单总价</th>
+			<th>下单时间</th>
+			<th>下单用户</th>
+			<th>状态</th>
+			<th>操作</th>
+
+			<!-- On cells (`td` or `th`) -->
+			<tr v-for="item in orderList">
+				<td class="danger">{{item.orderId}}</td>
+				<td class="warning">{{item.totalAmount}}</td>
+				<td class="primary">{{item.createDate}}</td>
+				<td class="danger">{{item.buyerName}}</td>
+<td v-if="item.status==1" class="primary">已完结</td>
+<td v-else-if="item.status==-2" class="warning">已撤销</td>
+<td v-else-if="item.status==-1" class="warning"><span style="color:red">撤销中</span></td>
+								<td v-else class="primary"><span style="color:blue">处理中</span>
+								</td>
+				<td class="success">
+
+					<button class="btn btn-info" @click="detail(item.list)">详情</button>
+										<button v-if="item.status==0" class="btn btn-danger" @click="changeStatus(item.orderId)">撤销</button>
+																				<button v-if="item.status==-1" class="btn btn-success" @click="cancel(item.orderId)">取消撤销</button>
+										
+					
+				</td>
+			</tr>
+		</table>
+	<nav aria-label="Page navigation">
+			<ul class="pagination">
+				<li><a aria-label="Previous" @click="operate(-1)"> <span
+						aria-hidden="true">&laquo;</span>
+				</a></li>
+				<li>
+				<li><a @click="current(n)" v-for="n in totalPage" :value="n">{{n}}</a></li>
+
+				</li>
+				<li><a aria-label="Next" @click="operate(1)"> <span
+						aria-hidden="true">&raquo;</span>
+				</a></li>
+			</ul>
+		</nav>
+
+		<table class="table table-bordered">
+			<!-- On rows -->
+			<caption>订单详情</caption>
+			<th>商品id</th>
+			<th>商品图片</th>
+			<th>商品名</th>
+			<th>数量</th>
+			<th>单价</th>
+
+			<!-- On cells (`td` or `th`) -->
+			<tr v-for="item in detailList">
+				<td class="danger">{{item.productId}}</td>
+				<td class="success">	<img :src=item.productImg style="height:100px;width:100px"  class="img-responsive "></td>
+				<td class="warning">{{item.productName}}</td>
+				<td class="success">{{item.productCount}}</td>
+				<td class="primary">{{item.productPrice}}</td>
+
+			</tr>
+		</table>
+	</div>
+	
+
+</div>
+</div>
+</div>
+
+</body>
+
+<script>
+new Vue({
+	el : "#content",
+	data : {
+		head : "http://localhost:8080/order",
+		orderList : "",
+		detailList : "",
+		pageIndex : 1,
+		pageSize : 5,
+		totalPage : "",
+
+	},
+	mounted : function() {
+		this.getOrder();
+	},
+	methods : {
+		
+		changeStatus : function(item) {
+			
+			this.$http.post(this.head+"/changeStatus", {
+				status : -1,
+				orderId : item,
+			}, {
+				emulateJSON : true
+			}).then(function(res) {
+				if (res.body.success) {
+					alert("已申请撤销");
+					this.getOrder();
+					
+				}
+
+			}, function(res) {
+				console.log(res.status);
+			});
+			
+		
+		},
+cancel : function(item) {
+			
+			this.$http.post(this.head+ "/changeStatus", {
+				status : 0,
+				orderId : item,
+			}, {
+				emulateJSON : true
+			}).then(function(res) {
+				if (res.body.success) {
+					alert("已取消");
+					this.getOrder();
+					
+				}
+
+			}, function(res) {
+				console.log(res.status);
+			});
+			
+		
+		},
+		getOrder : function() {
+			this.$http.get(this.head+"/getorderlist", {
+				params : {
+					pageIndex:this.pageIndex,
+					pageSize:this.pageSize
+				}
+
+			}).then(function(res) {
+
+				if (res.body.success) {
+					this.orderList = res.body.data.list;
+					this.totalPage = res.body.data.page;
+				} else {
+					alert("暂无数据")
+
+				}
+
+			})
+		},
+		detail : function(list) {
+			this.detailList = list;
+		},
+		current : function(id) {
+			this.pageIndex = id;
+			this.getOrder();
+
+		},
+		operate : function(id) {
+			this.pageIndex = this.pageIndex + id;
+			if (this.pageIndex < 1) {
+				this.pageIndex = 1
+			}
+			if (this.pageIndex >= this.totalPage) {
+				this.pageIndex = this.totalPage;
+			}
+			this.getOrder();
+
+		},
+
+	}
+})
+</script>
+
+<script>
+
+
+
+
+$(function() {
+	//先访问后台看是否有此用户记录，有就直接跳转到index.html
+ 	$.ajax({
+		url: "http://localhost:8080/user/whetherLogin",
+		type: "GET",
+		success: function(data) {
+		if(data.success){
+			var d=data.msg.split('-');
+			console.log(d)
+			$('#loginContainer').hide();
+			$('#sign').hide();
+			$('#weclome').text('欢迎您,'+d[0])
+			$('#logout').show();
+			window.userId=d[1]
+		}else{
+           $('#logout').hide();
+		}
+		}
+	})
+	
+
+})
+
+	 $('#login').on('click', function() {
+			$.ajax({
+				type: "POST",
+				url: "http://localhost:8080/user/login",
+				data: {
+					account: $('#account').val(),
+					password: $('#password').val(),
+					role:0,
+				},
+				success: function(data) {
+if(data.success){
+	window.userId=data.msg
+	window.location.href="./product.html"
+}else{
+	alert(data.msg)
+}
+				}
+			})
+		})</script>
+</html>

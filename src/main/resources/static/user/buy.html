@@ -1,0 +1,445 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>购物车</title>
+<link href="../assets/css/bootstrap.css" rel='stylesheet' type='text/css' />
+<!-- jQuery (necessary JavaScript plugins) -->
+<script type='text/javascript' src="../assets/js/jquery-1.10.2.js"></script>
+<!-- Custom Theme files -->
+<link href="../assets/css/style.css" rel='stylesheet' type='text/css' />
+<!-- Custom Theme files -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- start menu -->
+<link href="../assets/css/megamenu.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="../assets/js/megamenu.js"></script>
+<script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
+<script src="../assets/js/menu_jquery.js"></script>
+<script type="text/javascript" src="../assets/js/vue.js"></script>
+<script type="text/javascript" src="../assets/js/vue-resource.min.js"></script>
+<link rel="stylesheet" href="../assets/css/etalage.css">
+<script src="../assets/js/jquery.etalage.min.js"></script>
+<script>
+		
+		</script>
+<!-- the jScrollPane script -->
+<script type="text/javascript" src="../assets/js/jquery.jscrollpane.min.js"></script>
+		<script type="text/javascript" id="sourcecode">
+			$(function()
+			{
+				$('.scroll-pane').jScrollPane();
+			});
+		</script> 
+</head>
+<body>
+<!-- header_top -->
+<div class="top_bg">
+<div class="container">
+<div class="header_top">
+	<div class="top_left">
+		<h2><a href="#">通知</a> 尊敬的用户您好，请尽快完善信息！  </h2>
+	</div>
+	<div class="top_right">
+		<ul>
+			<li><a href="history.html">近期浏览历史</a></li>
+		<li class="login" >
+						<div  id="loginContainer">|<a href="#" id="loginButton"><span>登陆</span></a>
+						    <div id="loginBox">                
+						        <form id="loginForm">
+						                <fieldset id="body">
+						                	<fieldset>
+						                          <label for="account">用户名</label>
+						                          <input type="text" name="account" id="account">
+						                    </fieldset>
+						                    <fieldset>
+						                            <label for="password">密码</label>
+						                            <input type="password" name="password" id="password">
+						                     </fieldset>
+						                     <script>
+						                     function func(){
+						                    	 return false;
+						                     }
+						                     </script>
+						                    <input type="submit" id="login" value="登陆" onclick="return func()">
+						            	</fieldset>
+							 </form>
+				        </div>
+			      </div>
+			      							<div  id="logout" >|<a href="http://localhost:8080/user/logout" id="loginButton"><span>&nbsp;&nbsp;注销</span></a></div>
+			      			      
+			</li>
+		</ul>
+	</div>
+	<div class="clearfix"></div>
+</div>
+</div>
+</div>
+<!-- header -->
+<div class="header_bg">
+<div class="container">
+	<div class="header">
+		<div class="logo">
+			<a href="index.html"><img src="../assets/img/logo.png" alt="" style="height:50px;width="50px"/><span style="color:blue">&nbsp;&nbsp;( ¯(∞)¯ )の店&nbsp;&nbsp;</span><img src="../assets/img/logo2.png" alt="" style="height:50px;width="50px"/> </a>
+		</div>
+		
+		<!-- start header_right -->
+		<div class="header_right" id="sign">
+		<div class="create_btn"  >
+			<a class="arrow"  href="user.html">注册 <img src="../assets/img/right_arrow.png" alt=""/>  </a>
+		</div>
+	
+	
+		
+	
+		<div class="clearfix"></div>
+		</div>
+		<!-- start header menu -->
+		<ul class="megamenu skyblue">
+				<li><a class="color1" href="product.html">主页</a></li>
+			
+						
+			
+				<li><a class="color3" href="buy.html">购物车</a></li>
+								<li><a class="color5" href="order.html">订单中心</a></li>
+								<li><a class="color2 " href="user.html">用户中心</a></li>
+						
+			
+		</ul>
+	</div>
+</div>
+</div>
+<!-- content -->
+<div id="content">
+<div class="container">
+<div class="main">
+	<div class="shoping_bag">
+		<h4>{{userName}}的购物车 </h4>
+		<ul class="s_art">
+			<li><span> 共{{productCartList.length}}件商品</span></li>
+		</ul>
+		<div class="clearfix"></div>
+	</div>
+	<div class="shoping_bag1" v-for="item in productCartList">
+		<div class="shoping_left">
+			<div class="shoping1_of_1">
+					<img :src=item.imgurl  class="img-responsive ">
+					<br>
+			</div>
+			<div class="shoping1_of_2">
+				<h4><a >{{item.name}}</a> </h4>
+				<ul class="s_icons">
+					<li><a @click="change(item)"><img src="../assets/img/s_icon1.png" alt=""></a></li>					<li><a @click="deleteProduct(item.productId)"><img src="../assets/img/s_icon3.png" alt=""></a></li>
+				</ul>
+			</div>
+			
+			<div class="clearfix"></div>
+		</div>
+		<div class="shoping_right">
+<p>数量 &nbsp;<span> 	{{item.count}}				<input type="text" :id="item.productId"  style="display:none;width:50px;height:20px"><button :id=item.productId+'-'+item.count style="display:none" class="btn btn-primary btn-xs" @click="changeCount(item)">提交</button>
+</span></p>
+			<p>价格 &nbsp;<span>{{item.price}}</span></p>
+			<p>商品id &nbsp;<span> {{item.productId}}</span></p>		</div>
+		<div class="clearfix"></div>
+	</div>
+<div class="shoping_bag2">
+		<div class="shoping_left">
+			<a class="btn1" @click="balance">结算</a>
+			<br>
+						
+			
+		</div>
+		<div class="shoping_right">
+			<p class="tot">合计 &nbsp;<span class="color"> {{totalPrice}}&nbsp;&nbsp;$</span></p>
+			<br>
+			<button class="btn btn-primary" @click="emptyCart">清空购物车</button>
+		</div>
+		<hr>
+			<table class="table table-bordered">
+			<!-- On rows -->
+			<caption><h2>为您推荐</h2></caption>
+			<th>商品id</th>
+			<th>商品名</th>
+			<th>商品主图</th>
+			<th>价格</th>
+
+			<!-- On cells (`td` or `th`) -->
+			<tr v-for="item in historyList">
+				<td class="danger">{{item.id}}</td>
+				<td class="warning">{{item.name}}</td>
+
+				<!--  -->
+<td class="success"><a :href="'http://localhost:8080/user/details.html?id='+item.id+'&name='+item.name+'&discount='+item.discount+'&category='+item.category.name+'&imgurl='+item.imgurl+'&isNew='+item.isNew+'&description='+item.description+'&price='+item.price+'&stock='+item.stock"><img :src=item.imgurl style="height:100px;width:100px"  class="img-responsive "></a>	</td>
+<td class="primary">{{item.price}}&nbsp;$</td>
+			</tr>
+		</table>
+		<div class="clearfix"></div>
+	</div>
+	
+
+</div>
+</div>
+</div>
+
+</body>
+
+<script>
+
+new Vue({
+	el : '#content',
+	data : {
+		count:"",
+		price : "",
+		name : "",
+		category : "",
+		stock : "",
+		imgurl:"",
+		isNew:"",
+		description:"",
+		discount:"",
+		id:"",
+		productCartList : [],
+		head : "http://localhost:8080/order",
+		pageIndex : 1,
+		pageSize : 2,
+		totalPage : "",
+		lowprice:"",
+		highprice:"",
+		totalPrice:"",
+		userId:window.userId,
+		userName:"",
+		historyList:"",
+	},
+	mounted : function() {
+		this.getProduct();
+		
+	},
+	methods : {
+		
+	
+		 GetQueryString:function(name)
+		{
+			 var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+			  var r = window.location.search.substr(1).match(reg); 
+			  if (r != null) return decodeURI(r[2]); 
+
+		},
+		
+		change:function(item){
+		document.getElementById(item.productId).style.display="";
+		document.getElementById(item.productId+'-'+item.count).style.display="";
+		},
+	
+		addHistory:function(){
+			this.$http({
+				url : "http://localhost:8080/order/addHistory",
+				method : "post",
+				body : {
+
+					price : this.price,
+					name : this.name,
+					imgurl:this.imgurl,
+					id:this.id,
+					
+				},
+				emulateJSON : true
+			}).then(function(res) {
+				
+			}, function(res) {
+				console.log(res.status);
+			});
+		},
+		
+		checkCount : function(e) {
+
+			if (				parseInt(e.target.value) > parseInt(e.srcElement.dataset.stock) ) {
+				e.target.value = e.srcElement.dataset.stock
+			}
+			if(parseInt(e.target.value)<=0){
+				e.target.value=1;
+			}
+		},
+
+	
+
+		
+
+	
+		addCart : function() {
+			var input=document.getElementById(this.id);
+			if(input.value==""){
+				alert("请输入有效值")
+				return;
+			}
+			this.$http.post(this.head+"/addCart", {
+
+				price : this.price,
+				name : this.name,
+				id : this.id,
+				stock:this.stock,
+				count:input.value,
+				imgurl:this.imgurl,
+			}, {
+				emulateJSON : true
+			}).then(function(res) {
+				if (res.body.success) {
+					input.value="";
+					alert("添加成功");
+
+				}
+
+			}, function(res) {
+				console.log(res.status);
+			});
+		},
+		operate : function(id) {
+			this.pageIndex = this.pageIndex + id;
+			if (this.pageIndex < 1) {
+				this.pageIndex = 1
+			}
+			if (this.pageIndex >= this.totalPage) {
+				this.pageIndex = this.totalPage;
+			}
+			this.getRelativeProduct();
+
+		},
+		current : function(id) {
+			this.pageIndex = id;
+			this.getRelativeProduct();
+
+		},
+		
+		deleteProduct:function(productId){
+			this.$http.post(this.head+"/removeproduct",{
+
+				id:productId,
+			},{
+				emulateJSON:true
+			}).then(function(res){
+				if (res.body.success) {
+					
+					this.getProduct();
+				}
+			})
+		},
+
+		getProduct : function() {
+			this.$http.get(this.head+"/getCart"
+				).then(function(res) {
+
+				if(res.body.success){
+					this.productCartList = JSON.parse(res.body.data.cart.list);
+					this.userName = res.body.data.userName;
+					this.totalPrice = res.body.data.total;
+					if(res.body.data.cart.productList!=""){
+                        this.historyList=JSON.parse(res.body.data.cart.productList);
+                    }
+				}else{
+					this.totalPrice=0;
+					this.productCartList="";
+					this.historyList="";
+				}
+			
+
+			})
+		},
+		emptyCart:function(){
+			this.$http.post(this.head+"/cleancart",{
+				emulateJSON:true
+			}).then(function(res){
+				if (res.body.success) {
+					
+					this.getProduct();
+				}
+			})
+		},
+		balance:function(){
+			this.$http.post(this.head+"/balance",{
+				emulateJSON:true
+			}).then(function(res){
+				if (res.body.success) {
+					alert("结算成功!")
+					window.location.href="./order.html"
+				}else{
+					alert(res.body.msg)
+				}
+			})
+		},
+		changeCount : function(item) {
+			var input = document.getElementById(item.productId);
+			this.$http.post(this.head+"/addCart", {
+				price : item.price,
+				name : item.name,
+				id : item.productId,
+				name : item.name,
+				stock : item.stock,
+				count : input.value,
+				imgurl:item.imgurl,
+			}, {
+				emulateJSON : true
+			}).then(function(res) {
+				if (res.body.success) {
+					
+
+					document.getElementById(item.productId).style.display="none";
+					document.getElementById(item.productId+'-'+item.count).style.display="none";
+				input.value = "";
+				this.getProduct();
+				}
+
+			}, function(res) {
+				console.log(res.status);
+			});
+
+		},
+	}
+})
+</script>
+
+<script>
+
+
+
+
+$(function() {
+	//先访问后台看是否有此用户记录，有就直接跳转到index.html
+ 	$.ajax({
+		url: "http://localhost:8080/user/whetherLogin",
+		type: "GET",
+		success: function(data) {
+		if(data.success){
+			var d=data.msg.split('-');
+			console.log(d)
+			$('#loginContainer').hide();
+			$('#sign').hide();
+			$('#weclome').text('欢迎您,'+d[0])
+			$('#logout').show();
+			window.userId=d[1]
+		}else{
+           $('#logout').hide();
+		}
+		}
+	})
+	
+
+})
+
+	 $('#login').on('click', function() {
+			$.ajax({
+				type: "POST",
+				url: "http://localhost:8080/user/login",
+				data: {
+					account: $('#account').val(),
+					password: $('#password').val(),
+					role:0,
+				},
+				success: function(data) {
+if(data.success){
+	window.userId=data.msg
+	window.location.href="./product.html"
+}else{
+	alert(data.msg)
+}
+				}
+			})
+		})</script>
+</html>

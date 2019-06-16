@@ -1,0 +1,564 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>商品列表</title>
+<link href="../assets/css/bootstrap.css" rel='stylesheet' type='text/css' />
+<script type='text/javascript' src="../assets/js/jquery-1.10.2.js"></script>
+<!-- Custom Theme files -->
+<link href="../assets/css/style.css" rel='stylesheet' type='text/css' />
+<!-- Custom Theme files -->
+<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- start menu -->
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<link href="../assets/css/megamenu.css" rel="stylesheet" type="text/css" media="all" />
+<script type="text/javascript" src="../assets/js/megamenu.js"></script>
+<script type="text/javascript" src="../assets/js/vue.js"></script>
+<script type="text/javascript" src="../assets/js/vue-resource.min.js"></script>
+
+<script>$(document).ready(function(){$(".megamenu").megamenu();});</script>
+<script src="../assets/js/menu_jquery.js"></script>
+<!-- the jScrollPane script -->
+<script type="text/javascript" src="../assets/js/jquery.jscrollpane.min.js"></script>
+		<script type="text/javascript" id="sourcecode">
+			$(function()
+			{
+				$('.scroll-pane').jScrollPane();
+			});
+		</script>
+</head>
+<body>
+<!-- header_top -->
+<div class="top_bg">
+<div class="container">
+<div class="header_top">
+	<div class="top_left">
+		<h2><a href="#">通知</a> 尊敬的用户您好，请尽快完善信息！  </h2>
+	</div>
+	<div class="top_right">
+		<ul>
+			<li><a href="history.html">近期浏览历史</a></li>
+			<li class="login" >
+						<div  id="loginContainer">|<a href="#" id="loginButton"><span>登陆</span></a>
+						    <div id="loginBox">                
+						        <form id="loginForm">
+						                <fieldset id="body">
+						                	<fieldset>
+						                          <label for="account">用户名</label>
+						                          <input type="text" name="account" id="account">
+						                    </fieldset>
+						                    <fieldset>
+						                            <label for="password">密码</label>
+						                            <input type="password" name="password" id="password">
+						                     </fieldset>
+						                     <script>
+						                     function func(){
+						                    	 return false;
+						                     }
+						                     </script>
+						                    <input type="submit" id="login" value="登陆" onclick="return func()">
+						            	</fieldset>
+							 </form>
+				        </div>
+			      </div>
+			      							<div  id="logout" >|<a href="http://localhost:8080/user/logout" id="loginButton"><span>&nbsp;&nbsp;注销</span></a></div>
+			      			      
+			</li>
+		</ul>
+	</div>
+	<div class="clearfix"></div>
+</div>
+</div>
+</div>
+<!-- header -->
+<div class="header_bg">
+<div class="container">
+	<div class="header">
+		<div class="logo">
+			<a href="index.html"><img src="../assets/img/logo.png" alt="" style="height:50px;width="50px"/><span style="color:blue">&nbsp;&nbsp;( ¯(∞)¯ )の店&nbsp;&nbsp;</span><img src="../assets/img/logo2.png" alt="" style="height:50px;width="50px"/> </a>
+		</div>
+		
+		<!-- start header_right -->
+		<div class="header_right" id="sign">
+		<div class="create_btn"  >
+			<a class="arrow"  href="user.html">注册 <img src="../assets/img/right_arrow.png" alt=""/>  </a>
+		</div>
+	
+	
+		
+	
+		<div class="clearfix"></div>
+		</div>
+		<!-- start header menu -->
+	<ul class="megamenu skyblue">
+				<li><a class="color1" href="product.html">主页</a></li>
+			
+						
+			
+				<li><a class="color3" href="buy.html">购物车</a></li>
+								<li><a class="color5" href="order.html">订单中心</a></li>
+								<li><a class="color2 " href="user.html">用户中心</a></li>
+						
+			
+		</ul>
+	</div>
+</div>
+</div>
+<!-- content -->
+<div id="content">
+<div class="container">
+<div class="women_main">
+	<!-- start sidebar -->
+	<div class="col-md-3">
+	  <div class="w_sidebar">
+		<div class="w_nav1">
+			<h4>类目列表</h4>
+			<ul>
+			<li><a @click="filterCategory(-1)">全选</a></li>
+				<li v-for="item in categoryList"><a :id="item.id" @click="filterCategory(item.id)">{{item.name}}</a></li>
+				
+			</ul>	
+		</div>
+	
+	
+	
+		<section class="sky-form">
+						<h4>商品搜索</h4>
+						<div class="row1 scroll-pane">
+							
+							<div class="form-group">
+								<label>价格搜索</label>
+								<br>
+							<input type=number style="width:50px;height:25px" maxlength="9" v-model="lowprice" >至<input style="width:50px;height:25px" maxlength="9" type=number v-model="highprice">&nbsp;&nbsp;<button class="btn btn-primary" @click="search"><span class="glyphicon glyphicon-search"></span></button>
+							</div>
+								<div class="form-group">
+																	<label>商品名搜索</label>
+								<br>
+
+							<input type=text placeholder="按商品名搜索" style="width:110px;height:25px"  v-model="sname" >&nbsp;&nbsp;<button class="btn btn-primary" @click="search"><span class="glyphicon glyphicon-search"></span></button>
+							</div>
+							
+						</div>						
+		</section>
+	</div>
+   </div>
+	<!-- start content -->
+	<div class="col-md-9 w_content">
+		<div class="women">
+					<h4 id="weclome"></h4>
+		
+			<ul class="w_nav">
+						<nav aria-label="Page navigation">
+			<ul class="pagination">
+				<li><a aria-label="Previous" @click="operate(-1)"> <span
+						aria-hidden="true">&laquo;</span>
+				</a></li>
+				<li>
+				<li><a @click="current(n)" v-for="n in totalPage" :value="n">{{n}}</a></li>
+
+				</li>
+				<li><a aria-label="Next" @click="operate(1)"> <span
+						aria-hidden="true">&raquo;</span>
+				</a></li>
+			</ul>
+		</nav>
+		     			<div class="clear"></div>	
+		     </ul>
+		     <div class="clearfix"></div>	
+		</div>
+	
+		
+		
+	
+		
+		
+		<div class="grids_of_4">
+		  <div class="grid1_of_4" v-for="item in productList" >
+				<div class="content_box"><a :href="'details.html?id='+item.id+'&name='+item.name+'&discount='+item.discount+'&category='
+				    +item.category.name+'&imgurl='+item.imgurl+'&isNew='+item.isNew+'&description='+item.description+'&price='+
+				    item.price+'&stock='+item.stock
+				    "> 
+			   	  <div class="view view-fifth">
+			   	   	 <img :src=item.imgurl  class="img-responsive" alt="暂无图片"/>
+				   	   	
+				   	  </a>
+				   </div>
+				    <h4><a :href="'details.html?id='+item.id+'&name='+item.name+'&discount='+item.discount+'&category='
+				    +item.category.name+'&imgurl='+item.imgurl+'&isNew='+item.isNew+'&description='+item.description+'&price='+
+				    item.price+'&stock='+item.stock
+				    "> {{item.name}}</a><span v-if="item.isNew==1" style="color:red">
+	                       &nbsp; (新品)
+			            </span> <span v-if="item.discount==1" style="color:blue">
+	                      &nbsp;(限时折扣!)
+			            </span></h4>
+				    
+				    <h4><p>{{item.description}}</p></h4> 
+				    价格：{{item.price}}$
+			   	</div>
+			</div>
+		
+		
+		
+		
+		</div>
+		<!-- end grids_of_4 -->
+	
+		
+	</div>
+	<div class="clearfix">	
+	
+			</div>
+	
+	<!-- end content -->
+</div>
+</div>
+</div>
+<!-- footer_top -->
+<div class="footer_top">
+ <div class="container">
+	
+  </div>
+</div>
+<!-- footer -->
+<div class="footer">
+
+</div>
+
+</body>
+
+
+<script>
+	new Vue({
+		el : '#content',
+		data : {
+			sid : "",
+			sprice : "",
+			scategory : "",
+			sname : "",
+			price : "",
+			name : "",
+			category : "",
+			stock : "",
+			categoryList : [],
+			productList : [],
+			head : "http://localhost:8080/product",
+			pageIndex : 1,
+			pageSize : 4,
+			totalPage : "",
+			lowprice:"",
+			highprice:"",
+			userId:window.userId,
+		},
+		mounted : function() {
+			this.getProduct();
+			this.getCategory();
+		},
+		methods : {
+			getCategory : function() {
+				this.$http.get("http://localhost:8080/category", {
+					params : {
+						method : "getcategory"
+					}
+				}).then(function(res) {
+					if (res.body.success) {
+						this.categoryList = res.body.data.list;
+					} else {
+						alert("初始化失败");
+					}
+				}, function() {
+					console.log('请求失败处理');
+				});
+			},
+			filterCategory:function(e){
+				if(e==-1){
+					this.scategory=""
+					this.highprice=""
+					this.lowprice=""
+					this.pageIndex=0
+					this.sname=""
+				}else{
+					this.pageIndex=0
+
+					this.highprice=""
+						this.lowprice=""
+							this.sname=""
+					this.scategory=e;
+				}
+				this.getProduct();
+			},
+			addProduct : function() {
+				this.$http({
+					url : this.head,
+					method : "post",
+					body : {
+						method : "create",
+						price : this.price,
+						name : this.name,
+						category : this.category,
+						stock : this.stock
+					},
+					emulateJSON : true
+				}).then(function(res) {
+					if (res.body.success) {
+						alert("新增成功");
+						this.getProduct();
+						this.clear();
+					}
+				}, function(res) {
+					console.log(res.status);
+				});
+
+			},
+			checkCount : function(e) {
+
+				if (				parseInt(e.target.value) > parseInt(e.srcElement.dataset.stock) ) {
+					e.target.value = e.srcElement.dataset.stock
+				}
+				if(parseInt(e.target.value)<=0){
+					e.target.value=1;
+				}
+			},
+
+			search : function() {
+				if (this.sid == "") {
+					this.pageIndex = 1;
+					this.getProduct();
+				} else {
+					this.$http.get(this.head+"/getById", {
+						params : {
+							id : this.sid
+						}
+					}).then(function(res) {
+						if (res.body.success) {
+							this.productList = res.body.data.list
+
+						} else {
+							alert(res.body.msg);
+						}
+					}, function() {
+						console.log('请求失败处理');
+					});
+				}
+			},
+			deleteProduct : function(id) {
+				this.$http.post(this.head, {
+					method : "delete",
+					id : id
+				}, {
+					emulateJSON : true
+				}).then(function(res) {
+					if (res.body.success) {
+						alert("删除成功");
+						this.getProduct();
+					}
+				}, function(res) {
+					console.log(res.status);
+				});
+			},
+
+			logout : function() {
+				this.$http.post("http://localhost:8080/user/logout", {
+					emulateJSON : true
+				}).then(function(res) {
+					if (res.body.success) {
+						alert("登出成功");
+						window.location.href = "./sign.html"
+					}
+				}, function(res) {
+					console.log(res.status);
+				});
+			},
+
+			getInfo : function(item) {
+				this.uprice = item.price;
+				this.uname = item.name;
+				this.ucategory = item.category.value;
+				this.uid = item.id;
+				this.ustock = item.stock;
+			},
+
+			addCart : function(item) {
+				var input=document.getElementById(item.id);
+				if(input.value==""){
+					alert("请输入有效值")
+					return;
+				}
+				this.$http.post("http://localhost:8080/order/addCart", {
+					price : item.price,
+					name : item.name,
+					id : item.id,
+					name : item.name,
+					stock:item.stock,
+					count:input.value
+				}, {
+					emulateJSON : true
+				}).then(function(res) {
+					if (res.body.success) {
+						input.value="";
+						alert("添加成功");
+
+					}else{
+						alert(res.body.msg)
+					}
+
+				}, function(res) {
+					console.log(res.status);
+				});
+			},
+			operate : function(id) {
+				this.pageIndex = this.pageIndex + id;
+				if (this.pageIndex < 1) {
+					this.pageIndex = 1
+				}
+				if (this.pageIndex >= this.totalPage) {
+					this.pageIndex = this.totalPage;
+				}
+				this.getProduct();
+
+			},
+			current : function(id) {
+				this.pageIndex = id;
+				this.getProduct();
+
+			},
+			updateProduct : function() {
+				this.$http.post(this.head, {
+					method : "update",
+					price : this.uprice,
+					name : this.uname,
+					category : this.ucategory,
+					id : this.uid,
+					stock : this.ustock
+				}, {
+					emulateJSON : true
+				}).then(function(res) {
+					if (res.body.success) {
+						alert("修改成功");
+						this.getProduct();
+						this.clear();
+					}
+
+				}, function(res) {
+					console.log(res.status);
+				});
+			},
+
+			updateProduct : function() {
+				this.$http.post(this.head, {
+					method : "update",
+					price : this.uprice,
+					name : this.uname,
+					category : this.ucategory,
+					id : this.uid,
+					stock : this.ustock
+				}, {
+					emulateJSON : true
+				}).then(function(res) {
+					if (res.body.success) {
+						alert("修改成功");
+						this.getProduct();
+						this.clear();
+					}
+
+				}, function(res) {
+					console.log(res.status);
+				});
+			},
+			clear : function() {
+				this.uprice = "";
+				this.ucategory = "";
+				this.uname = "";
+				this.uid = "";
+				this.price = "";
+				this.name = "";
+				this.category = "";
+				this.sname = "";
+				this.scategory = "";
+				this.ustock = "";
+				this.stock = "";
+                this.highprice="",
+                 this.lowprice=""
+			},
+
+			getProduct : function() {
+				this.$http.get(this.head+"/getByList", {
+					params : {
+						name : this.sname,
+						highprice : this.highprice,
+						lowprice:this.lowprice,
+						category : this.scategory,
+						pageSize : this.pageSize,
+						pageIndex : this.pageIndex
+					}
+				}).then(function(res) {
+
+                    if (res.body.success) {
+                        if(res.body.data.list.length==0){
+                            alert("查找失败！")
+							this.clear();
+                            return;
+						}
+						this.productList = res.body.data.list
+						this.totalPage = res.body.data.page;
+					} else {
+						alert(res.body.msg);
+					}
+				}, function() {
+					console.log('请求失败处理');
+				});
+			},
+
+		}
+	})
+	
+</script>
+
+<script>
+$(function() {
+	//先访问后台看是否有此用户记录，有就直接跳转到index.html
+ 	$.ajax({
+		url: "http://localhost:8080/user/whetherLogin",
+		type: "GET",
+		success: function(data) {
+		if(data.success){
+			var d=data.msg.split('-');
+			console.log(d)
+			$('#loginContainer').hide();
+			$('#sign').hide();
+			$('#weclome').text('欢迎您,'+d[0])
+			$('#logout').show();
+			window.userId=d[1]
+
+		}else{
+           $('#logout').hide();
+		}
+		}
+	})
+	
+
+})
+
+	 $('#login').on('click', function() {
+			$.ajax({
+				type: "POST",
+				url: "http://localhost:8080/user/login",
+				data: {
+					account: $('#account').val(),
+					password: $('#password').val(),
+					role:0,
+				},
+				success: function(data) {
+if(data.success){
+	window.location.href="./product.html"
+}else{
+	alert(data.msg)
+}
+				}
+			})
+		})
+
+</script>
+
+</html>

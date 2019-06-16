@@ -1,0 +1,742 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>后台管理</title>
+    <!-- BOOTSTRAP STYLES-->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet"/>
+    <!-- FONTAWESOME STYLES-->
+    <link href="../assets/css/font-awesome.css" rel="stylesheet"/>
+    <!-- CUSTOM STYLES-->
+    <link href="../assets/css/custom.css" rel="stylesheet"/>
+    <!-- GOOGLE FONTS-->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+
+</head>
+<body>
+
+
+<div id="wrapper">
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="adjust-nav">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <img src="../assets/img/logo.png" style="width:50px;height:50px"/>
+                </a>
+            </div>
+
+            <span class="logout-spn">
+                  <a href="http://localhost:8080/user/admin/logout" style="color:#fff;">LOGOUT</a>
+
+                </span>
+        </div>
+    </div>
+    <!-- /. NAV TOP  -->
+    <nav class="navbar-default navbar-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav" id="main-menu">
+
+
+                <li>
+                    <a href="index.html"><i class="fa fa-desktop "></i>主控台</a>
+                </li>
+
+
+                <li>
+                    <a href="category.html"><i class="fa fa-table "></i>类目管理 </a>
+                </li>
+                <li>
+                    <a href="editproduct.html"><i class="fa fa-edit "></i>商品管理</a>
+                </li>
+
+
+                <li>
+                    <a href="user.html"><i class="fa fa-user "></i>用户管理</a>
+                </li>
+                <li class="active-link">
+                    <a href="ordermanage.html"><i class="fa fa-bar-chart-o"></i>订单管理</a>
+                </li>
+
+
+            </ul>
+        </div>
+
+    </nav>
+    <!-- /. NAV SIDE  -->
+    <div id="page-wrapper">
+        <div id="page-inner">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>订单管理 </h2>
+                </div>
+            </div>
+            <div id="content">
+
+                <div class="row">
+                    <ul class="nav nav-tabs">
+                        <li><a href="#order" data-toggle="tab" id="init">订单查询</a>
+                        </li>
+                        <li class="active"><a href="#data" data-toggle="tab">业绩查看</a>
+                        </li>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade" id="order">
+                        <label>订单id搜索</label> <br><input v-model="sid" placeholder="请输入订单id">
+                        <br>
+
+
+                        <label>用户搜索</label><br>
+                        <input
+                                v-model="saccount" placeholder="请输入用户名进行搜索">
+
+                        <br>
+                        <button type="button" class="btn btn-info" @click="search()">搜索</button>
+                        <table class="table table-bordered">
+                            <!-- On rows -->
+                            <caption>订单列表</caption>
+                            <th>订单id</th>
+                            <th>订单总价</th>
+                            <th>下单时间</th>
+                            <th>下单用户</th>
+                            <th>操作</th>
+                            <th>操作</th>
+
+                            <!-- On cells (`td` or `th`) -->
+                            <tr v-for="item in orderList">
+                                <td class="danger">{{item.orderId}}</td>
+                                <td class="warning">{{item.totalAmount}}</td>
+                                <td class="primary">{{item.createDate}}</td>
+                                <td class="info">{{item.buyerName}}</td>
+
+                                <td v-if="item.status==0" class="primary">进行中</td>
+                                <td v-else-if="item.status==1" class="primary">已完结</td>
+                                <td v-else class="primary">申请撤销</td>
+
+                                <td class="success">
+
+
+                                    <button class="btn btn-success" @click="detail(item.list)">详情</button>
+                                    <button v-if="item.status==0" class="btn btn-primary" @click="finish(item.orderId)">
+                                        完结订单
+                                    </button>
+                                    <button v-else-if="item.status==-1" class="btn btn-danger"
+                                            @click="issue(item.orderId)">同意撤销
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                <li><a aria-label="Previous" @click="operate(-1)"> <span
+                                        aria-hidden="true">&laquo;</span>
+                                </a></li>
+                                <li>
+                                <li><a @click="current(n)" v-for="n in totalPage" :value="n">{{n}}</a></li>
+
+                                </li>
+                                <li><a aria-label="Next" @click="operate(1)"> <span
+                                        aria-hidden="true">&raquo;</span>
+                                </a></li>
+                            </ul>
+                        </nav>
+
+                        <table class="table table-bordered">
+                            <!-- On rows -->
+                            <caption>订单详情</caption>
+                            <th>商品id</th>
+                            <th>商品名</th>
+                            <th>数量</th>
+                            <th>单价</th>
+
+                            <!-- On cells (`td` or `th`) -->
+                            <tr v-for="item in detailList">
+                                <td class="danger">{{item.productId}}</td>
+                                <td class="warning">{{item.productName}}</td>
+                                <td class="success">{{item.productCount}}</td>
+                                <td class="info">{{item.productPrice}}</td>
+
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="data">
+
+
+                        <label>按天数选择</label> <br>
+                        <select id="day">
+                            <option value="7">最近7天</option>
+                            <option value="30">最近30天</option>
+
+                        </select>
+                        <br>
+                        <div id="main" style="width: 700px;height:400px;"></div>
+                        <hr>
+                        <label>按类目选择</label> <br>
+                        <select id="category">
+                            <option v-for="item  in categoryList" :value="item.id">{{item.name}}</option>
+
+                        </select>
+                        <div id="main2" style="width: 700px;height:400px;"></div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- /. ROW  -->
+</div>
+<!-- /. PAGE INNER  -->
+</div>
+<!-- /. PAGE WRAPPER  -->
+</div>
+<div class="footer">
+
+
+</div>
+
+
+<!-- /. WRAPPER  -->
+<!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+<!-- JQUERY SCRIPTS -->
+<script src="../assets/js/jquery-1.10.2.js"></script>
+<!-- BOOTSTRAP SCRIPTS -->
+<script src="../assets/js/bootstrap.min.js"></script>
+<!-- CUSTOM SCRIPTS -->
+<script src="../assets/js/custom.js"></script>
+<script src="../assets/js/vue.js"></script>
+<script
+        src="../assets/js/vue-resource.min.js"></script>
+<script>
+    new Vue({
+        el: "#content",
+        data: {
+            head: "http://localhost:8080/order",
+            orderList: "",
+            detailList: "",
+            pageIndex: 1,
+            pageSize: 5,
+            totalPage: "",
+            saccount: "",
+            sid: "",
+            categoryList: [],
+            ope: false,
+
+        },
+        mounted: function () {
+
+            this.getSelf();
+
+
+        },
+
+
+        methods: {
+
+            getSelf: function () {
+                this.$http.get("http://localhost:8080/user/getSelf").then(function (res) {
+
+                    if (res.body.success) {
+                        console.log(res.body.data.user)
+                        if (res.body.data.user.role == 1) {
+                            this.ope = true;
+                            this.getOrder();
+                            this.getCategory();
+                            document.getElementById("init").click();
+                        } else {
+                            alert(res.body.msg)
+                        }
+                    } else {
+                        alert(res.body.msg)
+                    }
+
+                })
+            },
+
+            getOrder: function () {
+                if (this.ope) {
+                    this.$http.get(this.head + "/getorderlist", {
+                        params: {
+                            pageIndex: this.pageIndex,
+                            pageSize: this.pageSize,
+                            account: this.saccount,
+                        }
+
+                    }).then(function (res) {
+
+                        if (res.body.success) {
+                            this.orderList = res.body.data.list;
+                            this.totalPage = res.body.data.page;
+                        } else {
+                            alert("暂无数据")
+
+                        }
+
+                    })
+                }
+
+
+            },
+            getCategory: function () {
+                if (this.ope) {
+                    this.$http.get("http://localhost:8080/category", {
+                        params: {
+                            method: "getcategory"
+                        }
+                    }).then(function (res) {
+                        if (res.body.success) {
+                            this.categoryList = res.body.data.list;
+
+                        } else {
+                            alert("初始化失败");
+                        }
+                    }, function () {
+                        console.log('请求失败处理');
+                    });
+                }
+            },
+            finish: function (item) {
+                this.$http.post(this.head + "/changeStatus", {
+                    status: 1,
+                    orderId: item,
+                }, {
+                    emulateJSON: true
+                }).then(function (res) {
+                    if (res.body.success) {
+                        alert("修改成功");
+                        this.getOrder();
+
+                    }
+
+                }, function (res) {
+                    console.log(res.status);
+                });
+
+            },
+
+
+            search: function () {
+                if (this.ope) {
+                    if (this.sid == "") {
+                        this.pageIndex = 1;
+                        this.getOrder();
+                    } else {
+                        this.$http.get(this.head + "/getById", {
+                            params: {
+                                id: this.sid
+                            }
+                        }).then(function (res) {
+                            if (res.body.success) {
+                                this.orderList = res.body.data.list;
+                                this.totalPage = res.body.data.page;
+                            }
+                        }, function () {
+                            console.log('请求失败处理');
+                        });
+                    }
+                }
+
+            },
+
+            issue: function (item) {
+
+                this.$http.post(this.head + "/changeStatus", {
+                    status: -2,
+                    orderId: item,
+                }, {
+                    emulateJSON: true
+                }).then(function (res) {
+                    if (res.body.success) {
+                        alert("修改成功");
+                        this.getOrder();
+
+                    }
+
+                }, function (res) {
+                    console.log(res.status);
+                });
+
+
+            },
+            detail: function (list) {
+                this.detailList = list;
+            },
+            current: function (id) {
+                this.pageIndex = id;
+                this.getOrder();
+
+            },
+            operate: function (id) {
+                this.pageIndex = this.pageIndex + id;
+                if (this.pageIndex < 1) {
+                    this.pageIndex = 1
+                }
+                if (this.pageIndex >= this.totalPage) {
+                    this.pageIndex = this.totalPage;
+                }
+                this.getOrder();
+
+            },
+
+        },
+    })
+</script>
+<script src="../assets/js/echarts.js"></script>
+<script>
+    //定义一个全局的图表对象
+    var myChart = echarts.init(document.getElementById('main'));
+
+
+    var myChart2 = echarts.init(document.getElementById('main2'));
+
+    var option;
+    var option2;
+    $(function () {
+        //先访问后台看是否有此用户记录，有就直接跳转到index.html
+
+        $.ajax({
+            url: "http://localhost:8080/order/admin/getOrderData",
+            type: 'get',
+            data: {
+                day: 7,
+            },
+            success: function (data) {
+                if (data.data.dataList.orderCount.length <= 0) {
+                    return;
+                }
+
+
+                option = {
+                    title: {
+                        text: '最近7天营业情况',
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['金额', '订单数']
+                    },
+                    toolbox: {
+                        show: true,
+
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data.data.dataList.dateList
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '{value}'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '订单数',
+                            type: 'line',
+                            data: data.data.dataList.orderCount,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                        {
+                            name: '金额',
+                            type: 'line',
+                            data: data.data.dataList.amountList,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大成交额'},
+                                    {type: 'min', name: '最小成交额'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option, true);
+            }
+        })
+
+        $.ajax({
+            url: "http://localhost:8080/order/admin/getProductData",
+            type: 'get',
+            data: {
+                categoryId: $('#category').val(),
+            },
+            success: function (data) {
+
+                if (data.data.dataList.name.length == 0) {
+                    alert("暂无数据")
+                    return;
+                }
+
+                option2 = {
+                    title: {
+                        text: $("#category").find("option:selected").text() + "的商品交易情况",
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['数量', '成交额']
+                    },
+                    toolbox: {
+                        show: true,
+
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: data.data.dataList.name
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '数量',
+                            type: 'bar',
+                            data: data.data.dataList.count,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                        {
+                            name: '成交额',
+                            type: 'bar',
+                            data: data.data.dataList.trade,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大成交额'},
+                                    {type: 'min', name: '最小成交额'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+
+
+                myChart2.setOption(option2, true);
+            }
+        })
+
+
+    })
+
+    $('#category').change(function () {
+        $.ajax({
+            url: "http://localhost:8080/order/admin/getProductData",
+            type: 'get',
+            data: {
+                categoryId: $('#category').val(),
+            },
+            success: function (data) {
+
+                if (data.data.dataList.name.length == 0) {
+                    return;
+                }
+
+
+                option2 = {
+                    title: {
+                        text: $("#category").find("option:selected").text() + "的商品交易情况",
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['数量', '成交额']
+                    },
+                    toolbox: {
+                        show: true,
+
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: data.data.dataList.name
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '数量',
+                            type: 'bar',
+                            data: data.data.dataList.count,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                        {
+                            name: '成交额',
+                            type: 'bar',
+                            data: data.data.dataList.trade,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大成交额'},
+                                    {type: 'min', name: '最小成交额'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+
+
+                myChart2.setOption(option2, true);
+            }
+        })
+    })
+
+    $("#day").change(function () {
+        $.ajax({
+            url: "http://localhost:8080/order/admin/getOrderData",
+            type: 'get',
+            data: {
+                day: $('#day').val(),
+            },
+            success: function (data) {
+                if (data.data.dataList.orderCount.length <= 0) {
+                    return;
+                }
+                option = {
+                    title: {
+                        text: '最近' + $('#day').val() + '天营业情况',
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['金额', '订单数']
+                    },
+                    toolbox: {
+                        show: true,
+
+                    },
+                    calculable: true,
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: data.data.dataList.dateList
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '{value}'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '订单数',
+                            type: 'line',
+                            data: data.data.dataList.orderCount,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'},
+                                    {type: 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                        {
+                            name: '金额',
+                            type: 'line',
+                            data: data.data.dataList.amountList,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大成交额'},
+                                    {type: 'min', name: '最小成交额'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option, true);
+
+            }
+
+        });
+    })
+
+
+    // 为echarts对象加载数据
+
+</script>
+</body>
+</html>

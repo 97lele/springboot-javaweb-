@@ -1,0 +1,304 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>后台管理</title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="../assets/css/font-awesome.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="../assets/css/custom.css" rel="stylesheet" />
+     <!-- GOOGLE FONTS-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+</head>
+<body>
+     
+           
+          
+    <div id="wrapper">
+         <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="adjust-nav">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">
+                        <img src="../assets/img/logo.png" style="width:50px;height:50px"/>
+                    </a>
+                </div>
+              
+                 <span class="logout-spn" >
+                  <a href="http://localhost:8080/user/admin/logout" style="color:#fff;">LOGOUT</a>
+
+                </span>
+            </div>
+        </div>
+        <!-- /. NAV TOP  -->
+     <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                 
+
+
+
+                    <li class="active-link">
+                        <a href="index.html" ><i class="fa fa-desktop "></i>主控台</a>
+                    </li>
+                   
+
+                    <li>
+                        <a href="category.html"><i class="fa fa-table "></i>类目管理 </a>
+                    </li>
+                    <li>
+                        <a href="editproduct.html"><i class="fa fa-edit "></i>商品管理</a>
+                    </li>
+
+
+                    <li  class="active-link">
+                        <a href="user.html"><i class="fa fa-user"></i>用户管理</a>
+                    </li>
+                    <li>
+                        <a href="ordermanage.html"><i class="fa fa-bar-chart-o"></i>订单管理</a>
+                    </li>
+
+
+                  
+                    
+                </ul>
+                            </div>
+
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+                <div class="row" >
+                    <div class="col-md-12">
+                     <h2>用户管理 </h2>   
+                    </div>
+                </div>
+                	<div id="content">
+
+                
+                  <hr />
+                       
+                            <div class="tab-pane fade active in" id="searchproduct">
+                                	<div class="form-group">
+
+			<label>用户账号搜索</label> <br><input v-model="name" placeholder="请输入用户账号">
+<br>
+	
+
+			<button type="button" class="btn btn-info" @click="getUser()">搜索</button>
+			<br>
+			<table class="table table-bordered">
+			<!-- On rows -->
+			<caption>用户列表</caption>
+			<th>用户名</th>
+			<th>用户密码</th>
+			<th>收货地址</th>
+			<th>手机号</th>
+			<th>邮箱</th>
+			<th>状态</th>
+			<th>操作</th>
+
+			<!-- On cells (`td` or `th`) -->
+			<tr v-for="item in userList">
+				<td class="active">{{item.account}}</td>
+				<td class="danger">{{item.password}}</td>
+				<td class="warning">{{item.address}}</td>
+				<td class="info">{{item.mobile}}</td>
+				<td class="success">{{item.email}}</td>
+				<td class="active">
+				<span v-if="item.status == 0">冻结</span>
+				<span v-else>正常</span>
+				</td>
+
+				<td class="active">
+				<button type="button" v-if="item.status == 0"
+						class="btn btn-success" @click="change(item)">解冻</button>
+				<button type="button" v-else
+						class="btn btn-danger" @click="change(item)">冻结</button></span>
+				</button>
+			
+			</tr>
+		</table>
+		<nav aria-label="Page navigation">
+			<ul class="pagination">
+				<li><a aria-label="Previous" @click="operate(-1)"> <span
+						aria-hidden="true">&laquo;</span>
+				</a></li>
+				<li>
+				<li><a @click="current(n)" v-for="n in totalPage" :value="n">{{n}}</a></li>
+
+				</li>
+				<li><a aria-label="Next" @click="operate(1)"> <span
+						aria-hidden="true">&raquo;</span>
+				</a></li>
+			</ul>
+		</nav>
+		</div>
+
+                            </div>
+
+
+
+                        </div>
+                
+                   </div>           
+  
+		</div>
+		
+                 <!-- /. ROW  -->           
+    </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+    <div class="footer">
+      
+    
+        </div>
+          
+
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="../assets/js/jquery-1.10.2.js"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="../assets/js/bootstrap.min.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+    <script src="../assets/js/custom.js"></script>
+       <script src="../assets/js/vue.js"></script>
+<script
+	src="../assets/js/vue-resource.min.js"></script>
+    <script>
+    	new Vue({
+		el : '#content',
+		data : {
+			name:"",
+			userList : [],
+			head : "http://localhost:8080/user",
+			pageIndex : 1,
+			pageSize : 5,
+			totalPage : "",
+			ope:false,
+		},
+		mounted : function() {
+			this.getSelf();
+			
+			
+		},
+		methods : {
+			
+		
+			
+		 
+			getSelf : function() {
+				this.$http.get(this.head+"/getSelf").then(function(res) {
+
+					if(res.body.success){
+						console.log(res.body.data.user)
+	if(res.body.data.user.role==1){
+		this.ope=true;
+		this.getUser()
+	}else{
+        alert(res.body.msg)
+	}
+					}else{
+                        alert(res.body.msg)
+
+                    }
+				
+
+				})
+			},
+	
+
+			
+		
+	change:function(item){
+		if(this.ope){
+			var status=1;
+			if(item.status==1){
+				status=0;
+			}
+			
+				this.$http.post(this.head+"/admin/changeStatus", {
+
+						status : status,
+						userId:item.userId,
+					}, {
+						emulateJSON : true
+					}).then(function(res) {
+						if (res.body.success) {
+							alert("更改成功");
+							window.location.href="http://localhost:8080/admin/user.html"
+						}
+					}, function(res) {
+						console.log(res.status);
+					});
+			
+		}
+		
+		
+	},
+
+		
+	operate : function(id) {
+				this.pageIndex = this.pageIndex + id;
+				if (this.pageIndex < 1) {
+					this.pageIndex = 1
+				}
+				if (this.pageIndex >= this.totalPage) {
+					this.pageIndex = this.totalPage;
+				}
+				this.getUser();
+
+			},
+			current : function(id) {
+				this.pageIndex = id;
+				this.getUser();
+
+			},
+			
+			
+			
+		
+			
+
+			getUser : function() {
+				console.log(this.ope)
+				if(this.ope){
+					this.$http.get(this.head+"/getUser", {
+						params : {
+							account : this.name,
+							pageSize : this.pageSize,
+							pageIndex : this.pageIndex
+						}
+					}).then(function(res) {
+						if (res.body.success) {
+							this.userList = res.body.data.list
+							this.totalPage = res.body.data.page;
+						this.name="";
+						} else {
+							console.log(res.body.data)
+							alert(res.body.msg);
+						}
+					}, function() {
+						console.log('请求失败处理');
+					});
+				}
+				},
+			
+
+		}
+	})	
+    </script>
+   
+</body>
+</html>

@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>后台管理</title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="../assets/css/font-awesome.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="../assets/css/custom.css" rel="stylesheet" />
+     <!-- GOOGLE FONTS-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<body>
+     
+           
+          
+    <div id="wrapper">
+         <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="adjust-nav">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand">
+                        <img src="../assets/img/logo.png" style="width:50px;height:50px" />
+                    </a>
+                </div>
+              
+                 <span class="logout-spn" >
+                  <a href="http://localhost:8080/user/admin/logout" style="color:#fff;">LOGOUT</a>
+
+                </span>
+            </div>
+        </div>
+        <!-- /. NAV TOP  -->
+     <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+                 
+
+
+                    <li >
+                        <a href="index.html" ><i class="fa fa-desktop "></i>主控台</a>
+                    </li>
+                   
+
+                    <li class="active-link">
+                        <a href="category.html"><i class="fa fa-table "></i>类目管理 </a>
+                    </li>
+                    <li>
+                        <a href="editproduct.html"><i class="fa fa-edit "></i>商品管理</a>
+                    </li>
+
+
+                    <li>
+                        <a href="user.html"><i class="fa fa-user "></i>用户管理</a>
+                    </li>
+                    <li>
+                        <a href="ordermanage.html"><i class="fa fa-bar-chart-o"></i>订单管理</a>
+                    </li>
+
+                  
+                    
+                </ul>
+                            </div>
+
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+                <div class="row" >
+                    <div class="col-md-12">
+                     <h2>类目管理 </h2>   
+                    </div>
+                </div>
+                <div class="row">
+                	   <div class="col-lg-6 col-md-6">
+                        <span id="new" class="btn btn-primary">新增类目</span>
+                    </div>
+                </div>
+                
+                  <hr />
+                	  <div class="row">
+				<table class="table table-bordered">
+			<!-- On rows -->
+			<caption>类别列表</caption>
+			
+			<!-- On cells (`td` or `th`) -->
+			<tbody class=	'category-wrap'>
+					
+			
+			</tbody>
+		</table>
+		</div> 
+                
+                              
+  
+               <div class="row">
+                	   <div class="col-lg-6 col-md-6">
+                        <span id="submit" class="btn btn-success">提交</span>
+                    </div>
+                </div>
+		</div>
+		
+                 <!-- /. ROW  -->           
+    </div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+    <div class="footer">
+      
+    
+        </div>
+          
+
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="../assets/js/jquery-1.10.2.js"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="../assets/js/bootstrap.min.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+    <script src="../assets/js/custom.js"></script>
+    <script>
+    		var listurl="http://localhost:8080/category";
+    		var addurl="http://localhost:8080/category/admin/create";
+    		var deleteurl="http://localhost:8080/category/admin/delete"
+    	$(function(){
+    	
+    		getList();
+    	})
+    	
+    		function getList() {
+				$.getJSON(
+						listurl,
+						function(data) {
+							if (data.success) {
+								var dataList = data.data.list;
+								$('.category-wrap').html('');
+								var tempHtml ='<tr><th>类别</th>'+
+								'<th>优先级</th>'+
+								
+								'<th>操作</th></tr>'
+								dataList
+										.map(function(item, index) {
+											tempHtml += '<tr class="now">'
+													+ '<td class="info">'+item.name+'</td>'
+													+ '<td class="success">'+ item.priority+'</td>'
+													+ '<td class="default"><button type="button" class="btn btn-danger delete" data-id="'+item.id+'">删除</button></td></tr>'
+										});
+								$('.category-wrap').append(tempHtml);
+							}
+						});
+						
+						
+					
+	}
+    		
+    		$('#new')
+			.click(
+					function() {
+						
+						var tempHtml = '<tr class="temp">'
+							+ '<td class="info"><input  type="text" class="category" placeholder="分类名"></td>'
+							+ '<td class="success"><input  type="number" class="priority" placeholder="优先级"></td>'
+							+ '<td class="default"><button type="button" class="btn btn-danger delete">删除</button></td></tr>'
+						$('.category-wrap').append(tempHtml);
+					});
+    	$('#submit').click(function() {
+		var tempArr = $('.temp');
+		var productCategoryList = [];
+		tempArr.map(function(index, item) {
+			var tempObj = {};
+			tempObj.name = $(item).find('.category').val();
+			tempObj.priority = $(item).find('.priority').val();
+			if (tempObj.name && tempObj.priority) {
+				productCategoryList.push(tempObj);
+			}
+		});
+		console.log(productCategoryList)
+		$.ajax({
+			
+			type: "POST",
+			url: addurl,
+			data: {
+				list:JSON.stringify(productCategoryList),
+
+				method:"createcategory",
+			},
+			success : function(data) {
+				if (data.success) {
+					alert('提交成功！');
+					getList();
+				} else {
+					alert('提交失败！');
+				}
+			}
+		});
+	});
+$('.category-wrap').on('click', '.temp .delete',
+			function(e) {
+				console.log($(this).parent());
+				$(this).parent().parent().remove();
+
+			});
+
+	$('.category-wrap').on('click', '.now .delete',
+			function(e) {
+				var target = e.currentTarget;
+				if(confirm('确定么?')){
+					
+						$.ajax({
+							url : deleteurl,
+							type : 'POST',
+							data : {
+								id : target.dataset.id
+							},
+							success : function(data) {
+								if (data.success) {
+									alert('删除成功！');
+									getList();
+								} else {
+									alert('删除失败！');
+								}
+							}
+						});
+					
+				}
+			});
+    </script>
+   
+</body>
+</html>
